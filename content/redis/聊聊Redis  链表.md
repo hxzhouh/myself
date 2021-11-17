@@ -25,7 +25,7 @@ typedef struct listNode {
 
 多个 `listNode` 可以通过 `prev` 和 `next` 指针组成双端链表
 
-<img src="../../img/Untitled/.assets/20200316215937.png" alt="链表" style="zoom:200%;" />
+<img src="../../img/聊聊Redis  链表/.assets/20200316215937.png" alt="链表" style="zoom:200%;" />
 
 redis 还有一个数据结构来简化链表的操作
 
@@ -59,7 +59,7 @@ ypedef struct list {
 - `free` 函数用于释放链表节点所保存的值；
 - `match` 函数则用于对比链表节点所保存的值和另一个输入值是否相等。
 
-![](../../img/Untitled/.assets/20200316220205.png)
+![](../../img/聊聊Redis  链表/.assets/20200316220205.png)
 
 Redis 的链表实现的特性可以总结如下：
 
