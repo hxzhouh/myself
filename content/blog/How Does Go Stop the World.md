@@ -25,23 +25,23 @@ func main() {
 
 第一步，抢占所有正在运行的`goroutines`
 
-![](../../img/go 怎么做 stw/.assets/20200428164159.png)
+![](../../img/How Does Go Stop the World/.assets/20200428164159.png)
 
 第二步，一旦 `goroutines`被抢占，正在运行的`goroutines`将在安全的地方暂停，然后所有的p<sup>[1]</sup>都将被标记为暂停，停止运行任何代码。
 
-![](../../img/go 怎么做 stw/.assets/20200428164444.png)
+![](../../img/How Does Go Stop the World/.assets/20200428164444.png)
 
 第三步，然后，go调度器将M<sup>[2]</sup>与P分离,并且将M放到空闲列表里面。
 
-![](../../img/go 怎么做 stw/.assets/20200428164609.png)
+![](../../img/How Does Go Stop the World/.assets/20200428164609.png)
 
 对于在每个M上运行的Goroutines，它们将在全局队列<sup>[3]</sup>>中等待：
 
-![](../../img/go 怎么做 stw/.assets/20200428164654.png)
+![](../../img/How Does Go Stop the World/.assets/20200428164654.png)
 
 那么，一旦所有的`goroutines`都停止了，那么唯一活跃的`goroutines` （垃圾回收`goroutines`）将会安全的运行，并且在垃圾回收完成后，重新拉起所有的`goroutines`。具体情况，可以通过 go trace查看。
 
-![](../../img/go 怎么做 stw/.assets/20200428165140.png)
+![](../../img/How Does Go Stop the World/.assets/20200428165140.png)
 
 # System calls
 
@@ -61,7 +61,7 @@ func main() {
 
 他的trace情况。
 
-![](../../img/go 怎么做 stw/.assets/20200428165604.png)
+![](../../img/How Does Go Stop the World/.assets/20200428165604.png)
 
 系统调用在STW时期返回，但是现在已经没有P在运行了。所以他会放到全局队列里面,等待STW结束后再运行。
 
@@ -86,7 +86,7 @@ func main() {
 
 STW时长达到了2.6S
 
-![](../../img/go 怎么做 stw/.assets/20200428172521.png)
+![](../../img/How Does Go Stop the World/.assets/20200428172521.png)
 
 没有函数调用的goroutine将不会被抢占，并且它的P在任务结束之前不会被释放。这将迫使STW等待他， 有几种解决方案可改善循环中的抢占，有关其的更多信息，可以查看作者另外一篇文章 [[Go: Goroutine and Preemption).](https://medium.com/a-journey-with-go/go-goroutine-and-preemption-d6bc2aa2f4b7)
 
